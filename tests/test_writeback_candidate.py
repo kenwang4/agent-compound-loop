@@ -40,9 +40,16 @@ def test_schema_load():
         assert field in required
     assert data["properties"]["schema_version"]["const"] == "1.0"
     assert __version__ == "0.1.0"
-    # Status enum must stay tight so CI / reviewers share one vocabulary
+    # Status / lane enums must stay tight so CI / reviewers share one vocabulary
     status_enum = set(data["properties"]["status"]["enum"])
-    assert status_enum == {"pending", "accepted", "rejected", "expired"}
+    assert status_enum == {
+        "pending",
+        "in_review",
+        "accepted_pending_writeback",
+        "rejected",
+        "superseded",
+        "expired",
+    }
     assert data["properties"]["lane"]["enum"] == ["fast", "durable"]
 
 
