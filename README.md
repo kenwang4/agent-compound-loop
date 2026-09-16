@@ -79,6 +79,29 @@ Absolute machine paths (e.g. `/Users/...`, `~/...`) are **rejected** by design.
 pytest -q
 ```
 
+## Continuous integration
+
+GitHub Actions should run `pytest` on every push and pull request to `main`
+(`.github/workflows/ci.yml`: Python 3.11/3.12, `pip install -e ".[dev]"`).
+
+If the workflow file is missing from `main`, the push was blocked by missing
+OAuth `workflow` scope on the maintainer token. Refresh once, then push the
+local workflow file:
+
+```bash
+gh auth refresh -h github.com -s workflow
+git add .github/workflows/ci.yml
+git commit -m "Add GitHub Actions CI workflow for pytest on main"
+git push origin main
+```
+
+Until then, run tests locally:
+
+```bash
+pip install -e ".[dev]"
+pytest -q
+```
+
 CI runs the same suite on Ubuntu with Python 3.11+ (see `.github/workflows/ci.yml`).
 
 ## How (quick start)
