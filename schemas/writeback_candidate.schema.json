@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/kenwang4/agent-compound-loop/schemas/writeback-candidate.v1.json",
+  "title": "Writeback Candidate",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "candidate_id",
+    "lane",
+    "claim",
+    "source",
+    "owner",
+    "scope",
+    "review_on",
+    "destination",
+    "status",
+    "created_at",
+    "expires_at",
+    "task_id"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1.0"
+    },
+    "candidate_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160
+    },
+    "lane": {
+      "type": "string",
+      "enum": [
+        "fast",
+        "durable"
+      ]
+    },
+    "claim": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2000
+    },
+    "source": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1000
+    },
+    "verified_by": {
+      "type": "string",
+      "maxLength": 1000
+    },
+    "owner": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160
+    },
+    "scope": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500
+    },
+    "review_on": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 300
+    },
+    "destination": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "in_review",
+        "accepted_pending_writeback",
+        "rejected",
+        "superseded",
+        "expired"
+      ]
+    },
+    "reviewer": {
+      "type": "string",
+      "maxLength": 160
+    },
+    "review_evidence": {
+      "type": "string",
+      "maxLength": 1000
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "reviewed_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "task_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160
+    },
+    "session_id": {
+      "type": "string",
+      "maxLength": 160
+    },
+    "artifact": {
+      "type": "string",
+      "maxLength": 500
+    },
+    "acceptance": {
+      "type": "string",
+      "maxLength": 2000
+    }
+  },
+  "additionalProperties": false
+}

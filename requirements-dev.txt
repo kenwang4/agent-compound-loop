@@ -1,0 +1,2 @@
+# Dev / CI dependencies for agent-compound-loop
+pytest>=7.0
