@@ -6,3 +6,7 @@ __pycache__/
 .DS_Store
 writeback_candidates/*.json
 !writeback_candidates/.gitkeep
+
+dist/
+build/
+*.egg-info/
