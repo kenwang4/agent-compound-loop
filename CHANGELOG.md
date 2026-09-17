@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Reject Windows drive-letter and UNC absolute path refs in `_safe_ref`.
+- Keep `VERSION` / `pyproject.toml` / package `__version__` aligned via pytest.
+
+### Changed
+
+- GitHub Actions CI workflow (`.github/workflows/ci.yml`) still pending: maintainer token needs `workflow` scope (`gh auth refresh -s workflow`).
+
 ## [0.1.0] - 2026-09-16
 
 ### Added
@@ -20,7 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Drop-in agent skills under `skills/`.
 - Fake-data walkthrough under `examples/`.
 - Pytest suite (`tests/`) covering schema load, absolute-path rejection, happy-path create.
-- GitHub Actions CI (Ubuntu, Python 3.11+).
+- Local pytest suite runnable via `pip install -e ".[dev]" && pytest -q`.
 - MIT license, CONTRIBUTING, SECURITY, bug report issue template.
 
 ### Notes for `v0.1.0` GitHub Release

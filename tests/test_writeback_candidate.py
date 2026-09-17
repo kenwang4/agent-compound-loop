@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 import uuid
 from argparse import Namespace
 from pathlib import Path
@@ -127,3 +128,25 @@ def test_create_rejects_users_path_via_cli_args():
     )
     with pytest.raises(ValueError, match="relative"):
         create_candidate(args)
+
+
+def test_reject_windows_and_unc_paths():
+    """Windows drive and UNC refs must be rejected like POSIX absolutes."""
+    with pytest.raises(ValueError, match="relative"):
+        _safe_ref(r"C:\\Users\\demo\\notes.md", "source")
+    with pytest.raises(ValueError, match="relative"):
+        _safe_ref("C:/temp/leak.txt", "destination")
+    with pytest.raises(ValueError, match="relative"):
+        _safe_ref(r"\\\\server\\share\\file.md", "artifact")
+    with pytest.raises(ValueError, match="relative"):
+        _safe_ref("//server/share/file.md", "source")
+
+
+def test_version_files_stay_in_sync():
+    """Packaging path: VERSION, pyproject, and package __version__ must match."""
+    version_file = (REPO / "VERSION").read_text(encoding="utf-8").strip()
+    pyproject = (REPO / "pyproject.toml").read_text(encoding="utf-8")
+    m = re.search(r'^version\s*=\s*"([^"]+)"', pyproject, re.M)
+    assert m, "pyproject.toml missing [project] version"
+    assert version_file == m.group(1) == __version__
+

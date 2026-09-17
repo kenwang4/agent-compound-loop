@@ -120,10 +120,10 @@ def _safe_ref(value: str, field: str) -> str:
         raise ValueError(f"{field} is required")
     if len(value) > 500:
         raise ValueError(f"{field} exceeds 500 characters")
-    # Reject absolute / home / machine-specific paths (literal "/Users/" check).
+    # Reject absolute / home / machine-specific paths (POSIX, Windows drive, UNC).
     if value.startswith("/") or value.startswith("~") or "/Users/" in value:
         raise ValueError(f"{field} must use a relative, non-machine-specific reference")
-    if "\\" in value and re.match(r"^[A-Za-z]:\\", value):
+    if re.match(r"^[A-Za-z]:[\\/]", value) or value.startswith("\\\\") or value.startswith("//"):
         raise ValueError(f"{field} must use a relative, non-machine-specific reference")
     return value
 
