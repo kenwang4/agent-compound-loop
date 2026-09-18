@@ -150,3 +150,40 @@ def test_version_files_stay_in_sync():
     assert m, "pyproject.toml missing [project] version"
     assert version_file == m.group(1) == __version__
 
+
+def test_reject_linux_home_paths():
+    """Linux absolute /home/... refs must be rejected (parity with /Users/)."""
+    with pytest.raises(ValueError, match="relative"):
+        _safe_ref("/home/demo/notes.md", "source")
+    # Non-absolute path that still embeds /home/ (same posture as /Users/)
+    with pytest.raises(ValueError, match="relative"):
+        _safe_ref("cache/home/secret.md", "artifact")
+
+
+def test_create_default_destination_exists_in_repo():
+    """Public default --destination must point at a real tracked doc path."""
+    assert (REPO / "docs" / "02-writeback-protocol.md").is_file()
+    assert not (REPO / "docs" / "DECISIONS.md").exists()
+
+
+def test_cli_version_flag():
+    """Packaging path: CLI --version must report package __version__."""
+    import subprocess
+    import sys
+
+    proc = subprocess.run(
+        [sys.executable, "-m", "writeback_candidate", "--version"],
+        cwd=REPO,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert proc.returncode == 0
+    assert __version__ in (proc.stdout + proc.stderr)
+
+
+def test_create_default_destination_exists_in_repo():
+    """Public default --destination must point at a real tracked doc path."""
+    assert (REPO / "docs" / "02-writeback-protocol.md").is_file()
+    assert not (REPO / "docs" / "DECISIONS.md").exists()
+

@@ -7,9 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- CLI `--version` reports package `__version__` (packaging verification).
+
 ### Fixed
 
 - Reject Windows drive-letter and UNC absolute path refs in `_safe_ref`.
+- Also reject Linux `/home/...` absolute path refs in `_safe_ref`.
+- Default CLI `--destination` now points at existing `docs/02-writeback-protocol.md` (removed missing `docs/DECISIONS.md`).
 - Keep `VERSION` / `pyproject.toml` / package `__version__` aligned via pytest.
 
 ### Changed

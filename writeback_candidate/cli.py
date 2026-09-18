@@ -121,7 +121,12 @@ def _safe_ref(value: str, field: str) -> str:
     if len(value) > 500:
         raise ValueError(f"{field} exceeds 500 characters")
     # Reject absolute / home / machine-specific paths (POSIX, Windows drive, UNC).
-    if value.startswith("/") or value.startswith("~") or "/Users/" in value:
+    if (
+        value.startswith("/")
+        or value.startswith("~")
+        or "/Users/" in value
+        or "/home/" in value
+    ):
         raise ValueError(f"{field} must use a relative, non-machine-specific reference")
     if re.match(r"^[A-Za-z]:[\\/]", value) or value.startswith("\\\\") or value.startswith("//"):
         raise ValueError(f"{field} must use a relative, non-machine-specific reference")
@@ -358,8 +363,15 @@ def list_candidates(_: argparse.Namespace) -> int:
 
 
 def main() -> int:
+    from writeback_candidate import __version__
+
     parser = argparse.ArgumentParser(
         description="Manage bounded durable writeback candidates"
+    )
+    parser.add_argument(
+        "--version",
+        action="version",
+        version=f"%(prog)s {__version__}",
     )
     sub = parser.add_subparsers(dest="command", required=True)
 
@@ -371,7 +383,7 @@ def main() -> int:
     create.add_argument("--scope", default="current-task")
     create.add_argument("--review-on", default="next-independent-review")
     create.add_argument("--ttl-days", type=int, default=DEFAULT_TTL_DAYS)
-    create.add_argument("--destination", default="docs/DECISIONS.md")
+    create.add_argument("--destination", default="docs/02-writeback-protocol.md")
     create.add_argument("--acceptance", default="")
     create.add_argument("--artifact", default="")
     create.add_argument("--candidate-id", default="")
