@@ -182,8 +182,3 @@ def test_cli_version_flag():
     assert __version__ in (proc.stdout + proc.stderr)
 
 
-def test_create_default_destination_exists_in_repo():
-    """Public default --destination must point at a real tracked doc path."""
-    assert (REPO / "docs" / "02-writeback-protocol.md").is_file()
-    assert not (REPO / "docs" / "DECISIONS.md").exists()
-

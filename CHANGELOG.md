@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- `pyproject.toml` uses SPDX `license = "MIT"` + `license-files` (drops deprecated License classifier) for cleaner PyPI metadata.
 - GitHub Actions CI workflow (`.github/workflows/ci.yml`) still pending: maintainer token needs `workflow` scope (`gh auth refresh -s workflow`).
 
 ## [0.1.0] - 2026-09-16

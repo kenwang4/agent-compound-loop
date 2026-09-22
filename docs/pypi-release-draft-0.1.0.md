@@ -34,6 +34,7 @@ python -m build
 - [ ] `VERSION` matches tag and `pyproject.toml`
 - [ ] Changelog `[0.1.0]` section accurate
 - [ ] No private identity strings in package metadata or packaged files
+- [x] `pyproject.toml` SPDX `license = "MIT"` (no deprecated License classifier)
 - [ ] PyPI project name available / owned by maintainer brand **Aichill**
 
 Issue tracker: https://github.com/kenwang4/agent-compound-loop/issues/3
