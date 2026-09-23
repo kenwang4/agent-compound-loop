@@ -13,10 +13,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- TTL auto-expire `review_evidence` now points at `writeback_candidate/cli.py:ttl` (was a stale module path).
 - Reject Windows drive-letter and UNC absolute path refs in `_safe_ref`.
 - Also reject Linux `/home/...` absolute path refs in `_safe_ref`.
 - Default CLI `--destination` now points at existing `docs/02-writeback-protocol.md` (removed missing `docs/DECISIONS.md`).
 - Keep `VERSION` / `pyproject.toml` / package `__version__` aligned via pytest.
+
+### Tests
+
+- Cover overdue candidate expiry on inbox touch.
+- Cover privacy heuristic rejection of email addresses in candidate text.
 
 ### Changed
 
@@ -34,33 +40,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   (also `python -m writeback_candidate` and `scripts/writeback_candidate.py` shim).
 - Bounded durable candidate inbox (`writeback_candidates/`) with privacy path heuristics.
 - Drop-in agent skills under `skills/`.
-- Fake-data walkthrough under `examples/`.
 - Pytest suite (`tests/`) covering schema load, absolute-path rejection, happy-path create.
 - Local pytest suite runnable via `pip install -e ".[dev]" && pytest -q`.
-- MIT license, CONTRIBUTING, SECURITY, bug report issue template.
+- MIT license, SECURITY, CONTRIBUTING, CHANGELOG.
 
-### Notes for `v0.1.0` GitHub Release
+### Planned (tracked in issues)
 
-Suggested release title: `v0.1.0 — initial public methodology pack`
-
-Suggested release body:
-
-```markdown
-First public cut of **agent-compound-loop** (Aichill).
-
-- Protocols + schemas for two-speed writeback (fast session / durable candidate)
-- Casual merge minigame production gates (G1→G2→G3)
-- CLI: `writeback-candidate` / `python -m writeback_candidate`
 - CI: pytest on push/PR (Python 3.11+)
+- Optional PyPI publish once CI is green and a maintainer PyPI token exists
 
-Install from a clone:
+## Verify locally
 
 ```bash
 pip install -e ".[dev]"
-writeback-candidate --help
 pytest -q
 ```
-
-No fabricated adoption metrics. Feedback welcome via issues.
-```
-

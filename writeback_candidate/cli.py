@@ -101,7 +101,7 @@ def _expire_candidates(now: datetime | None = None) -> int:
             ):
                 candidate["status"] = "expired"
                 candidate["reviewer"] = "system:ttl"
-                candidate["review_evidence"] = "writeback_candidate.py:ttl"
+                candidate["review_evidence"] = "writeback_candidate/cli.py:ttl"
                 candidate["reviewed_at"] = current.isoformat(timespec="seconds")
                 _validate_candidate(candidate)
                 path.write_text(

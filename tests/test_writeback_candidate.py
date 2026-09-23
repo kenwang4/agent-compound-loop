@@ -181,4 +181,66 @@ def test_cli_version_flag():
     assert proc.returncode == 0
     assert __version__ in (proc.stdout + proc.stderr)
 
+def test_expire_overdue_candidates(tmp_path, monkeypatch):
+    """Inbox touch must mark overdue open candidates expired (TTL)."""
+    from datetime import datetime, timedelta, timezone
+    from writeback_candidate import cli as wb
+
+    inbox = tmp_path / "writeback_candidates"
+    inbox.mkdir()
+    monkeypatch.setattr(wb, "INBOX", inbox)
+    monkeypatch.setattr(wb, "ROOT", tmp_path)
+
+    created = datetime(2026, 1, 1, tzinfo=timezone.utc)
+    expired_at = created + timedelta(days=1)
+    now = created + timedelta(days=2)
+    candidate = {
+        "schema_version": "1.0",
+        "candidate_id": "ttl_expired_001",
+        "lane": "durable",
+        "claim": "overdue candidate should expire on inbox touch",
+        "source": "examples/fake-test-log.txt",
+        "verified_by": "",
+        "owner": "maintainer",
+        "scope": "ttl-test",
+        "review_on": "next-independent-review",
+        "destination": "docs/02-writeback-protocol.md",
+        "status": "pending",
+        "reviewer": "",
+        "review_evidence": "",
+        "created_at": created.isoformat(timespec="seconds"),
+        "expires_at": expired_at.isoformat(timespec="seconds"),
+        "reviewed_at": None,
+        "task_id": "ttl-task-001",
+        "session_id": "ttl-session",
+        "artifact": "examples/fake-test-log.txt",
+        "acceptance": "",
+    }
+    out = inbox / "candidate_ttl_expired_001.json"
+    out.write_text(json.dumps(candidate, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+    n = wb._expire_candidates(now=now)
+    assert n == 1
+    payload = json.loads(out.read_text(encoding="utf-8"))
+    assert payload["status"] == "expired"
+    assert payload["reviewer"] == "system:ttl"
+    assert payload["review_evidence"] == "writeback_candidate/cli.py:ttl"
+    assert payload["reviewed_at"] is not None
+
+
+def test_privacy_heuristic_blocks_email_in_claim():
+    """Public scanner must reject email addresses in durable candidate text."""
+    from writeback_candidate.cli import _scan_candidate
+
+    with pytest.raises(ValueError, match="privacy/secret"):
+        _scan_candidate(
+            {
+                "claim": "ping maintainer at someone@example.com please",
+                "source": "examples/fake-test-log.txt",
+                "verified_by": "",
+                "scope": "privacy",
+                "destination": "docs/02-writeback-protocol.md",
+                "acceptance": "",
+            }
+        )
 
