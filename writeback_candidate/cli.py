@@ -54,7 +54,10 @@ _BLOCK_PATTERNS = [
     re.compile(r"(?i)secret\s*[:=]"),
     re.compile(r"(?i)bearer\s+[a-z0-9\-._~+/]+=*"),
     re.compile(r"(?i)-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----"),
-    re.compile(r"(?i)\b[\w.+-]+@[\w.-]+\.[a-z]{2,}\b"),  # any email
+    # Email with dotted domain; exclude retina asset naming (@2x. / @3x.).
+    re.compile(
+        r"(?i)\b[\w.+-]+@(?!\d+x\.)(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,}\b"
+    ),
 ]
 
 
@@ -145,7 +148,7 @@ def _clean_text(value: str, field: str, limit: int) -> str:
 def _scan_candidate(candidate: dict[str, Any]) -> None:
     fields = " ".join(
         str(candidate.get(key, ""))
-        for key in ("claim", "source", "verified_by", "scope", "destination", "acceptance")
+        for key in ("claim", "source", "verified_by", "scope", "destination", "acceptance", "artifact")
     )
     for pattern in _BLOCK_PATTERNS:
         if pattern.search(fields):

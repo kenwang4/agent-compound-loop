@@ -244,3 +244,56 @@ def test_privacy_heuristic_blocks_email_in_claim():
             }
         )
 
+
+
+
+def test_privacy_heuristic_allows_retina_asset_paths():
+    """Asset names like cover@2x.png must not trip the email heuristic."""
+    from writeback_candidate.cli import _scan_candidate
+
+    _scan_candidate(
+        {
+            "claim": "ship retina cover assets/cover@2x.png",
+            "source": "examples/fake-test-log.txt",
+            "verified_by": "",
+            "scope": "assets",
+            "destination": "docs/02-writeback-protocol.md",
+            "acceptance": "assets/icon@3x.webp",
+            "artifact": "assets/cover@2x.png",
+        }
+    )
+
+
+def test_privacy_heuristic_still_blocks_real_email_domains():
+    """Real dotted email domains must still be rejected after @2x carve-out."""
+    from writeback_candidate.cli import _scan_candidate
+
+    with pytest.raises(ValueError, match="privacy/secret"):
+        _scan_candidate(
+            {
+                "claim": "contact ops@example.org for rollout",
+                "source": "examples/fake-test-log.txt",
+                "verified_by": "",
+                "scope": "privacy",
+                "destination": "docs/02-writeback-protocol.md",
+                "acceptance": "",
+                "artifact": "",
+            }
+        )
+
+
+def test_privacy_heuristic_still_blocks_real_email_domains():
+    """Real dotted email domains must still be rejected after @2x carve-out."""
+    from writeback_candidate.cli import _scan_candidate
+
+    with pytest.raises(ValueError, match="privacy/secret"):
+        _scan_candidate(
+            {
+                "claim": "contact ops@example.org for rollout",
+                "source": "examples/fake-test-log.txt",
+                "verified_by": "",
+                "scope": "privacy",
+                "destination": "docs/02-writeback-protocol.md",
+                "acceptance": "",
+            }
+        )
