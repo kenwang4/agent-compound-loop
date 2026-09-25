@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Privacy scanner also covers `review_evidence` / `reviewer` (was claim/source/artifact-only).
 - Privacy email heuristic no longer false-positives on retina asset paths (`cover@2x.png` / `icon@3x.webp`); still blocks real dotted-domain emails. Also scan `artifact` text.
 - TTL auto-expire `review_evidence` now points at `writeback_candidate/cli.py:ttl` (was a stale module path).
 - Reject Windows drive-letter and UNC absolute path refs in `_safe_ref`.
@@ -22,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Tests
 
+- Cover email rejection in `review_evidence`; drop duplicate still-blocks-email test definition.
 - Cover `@2x`/`@3x` asset-path carve-out vs real email domains in privacy heuristic.
 - Cover overdue candidate expiry on inbox touch.
 - Cover privacy heuristic rejection of email addresses in candidate text.

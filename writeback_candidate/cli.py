@@ -148,7 +148,17 @@ def _clean_text(value: str, field: str, limit: int) -> str:
 def _scan_candidate(candidate: dict[str, Any]) -> None:
     fields = " ".join(
         str(candidate.get(key, ""))
-        for key in ("claim", "source", "verified_by", "scope", "destination", "acceptance", "artifact")
+        for key in (
+            "claim",
+            "source",
+            "verified_by",
+            "scope",
+            "destination",
+            "acceptance",
+            "artifact",
+            "review_evidence",
+            "reviewer",
+        )
     )
     for pattern in _BLOCK_PATTERNS:
         if pattern.search(fields):
