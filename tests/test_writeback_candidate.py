@@ -300,3 +300,38 @@ def test_privacy_heuristic_blocks_email_in_review_evidence():
                 "reviewer": "maintainer",
             }
         )
+
+
+def test_privacy_heuristic_blocks_email_in_owner():
+    """owner / review_on text must be scanned like claim (email leak path)."""
+    from writeback_candidate.cli import _scan_candidate
+
+    with pytest.raises(ValueError, match="privacy/secret"):
+        _scan_candidate(
+            {
+                "claim": "ready for independent review",
+                "source": "examples/fake-test-log.txt",
+                "verified_by": "",
+                "owner": "ops@example.org",
+                "scope": "privacy",
+                "review_on": "next-independent-review",
+                "destination": "docs/02-writeback-protocol.md",
+                "acceptance": "",
+                "artifact": "docs/02-writeback-protocol.md",
+            }
+        )
+
+    with pytest.raises(ValueError, match="privacy/secret"):
+        _scan_candidate(
+            {
+                "claim": "ready for independent review",
+                "source": "examples/fake-test-log.txt",
+                "verified_by": "",
+                "owner": "maintainer",
+                "scope": "privacy",
+                "review_on": "email ops@example.org before merge",
+                "destination": "docs/02-writeback-protocol.md",
+                "acceptance": "",
+                "artifact": "docs/02-writeback-protocol.md",
+            }
+        )
