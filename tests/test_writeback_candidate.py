@@ -335,3 +335,42 @@ def test_privacy_heuristic_blocks_email_in_owner():
                 "artifact": "docs/02-writeback-protocol.md",
             }
         )
+
+
+def test_privacy_heuristic_blocks_email_in_task_id():
+    """task_id / session_id text must be scanned like claim (email leak path)."""
+    from writeback_candidate.cli import _scan_candidate
+
+    with pytest.raises(ValueError, match="privacy/secret"):
+        _scan_candidate(
+            {
+                "claim": "ready for independent review",
+                "source": "examples/fake-test-log.txt",
+                "verified_by": "",
+                "owner": "maintainer",
+                "scope": "privacy",
+                "review_on": "next-independent-review",
+                "destination": "docs/02-writeback-protocol.md",
+                "acceptance": "",
+                "artifact": "docs/02-writeback-protocol.md",
+                "task_id": "ping ops@example.org",
+                "session_id": "session_local",
+            }
+        )
+
+    with pytest.raises(ValueError, match="privacy/secret"):
+        _scan_candidate(
+            {
+                "claim": "ready for independent review",
+                "source": "examples/fake-test-log.txt",
+                "verified_by": "",
+                "owner": "maintainer",
+                "scope": "privacy",
+                "review_on": "next-independent-review",
+                "destination": "docs/02-writeback-protocol.md",
+                "acceptance": "",
+                "artifact": "docs/02-writeback-protocol.md",
+                "task_id": "task_ok",
+                "session_id": "session ops@example.org",
+            }
+        )
