@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Privacy scanner also covers `task_id` / `session_id` (was claim/source/artifact/owner/review fields only).
 - Privacy scanner also covers `owner` / `review_on` (was claim/source/artifact/review fields only).
 - Privacy scanner also covers `review_evidence` / `reviewer` (was claim/source/artifact-only).
 - Privacy email heuristic no longer false-positives on retina asset paths (`cover@2x.png` / `icon@3x.webp`); still blocks real dotted-domain emails. Also scan `artifact` text.
@@ -24,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Tests
 
+- Cover email rejection in `task_id` and `session_id`.
 - Cover email rejection in `owner` and `review_on`.
 - Cover email rejection in `review_evidence`; drop duplicate still-blocks-email test definition.
 - Cover `@2x`/`@3x` asset-path carve-out vs real email domains in privacy heuristic.
