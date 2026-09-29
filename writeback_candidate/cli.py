@@ -160,6 +160,8 @@ def _scan_candidate(candidate: dict[str, Any]) -> None:
             "artifact",
             "review_evidence",
             "reviewer",
+            "task_id",
+            "session_id",
         )
     )
     for pattern in _BLOCK_PATTERNS:
