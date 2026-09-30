@@ -374,3 +374,28 @@ def test_privacy_heuristic_blocks_email_in_task_id():
                 "session_id": "session ops@example.org",
             }
         )
+
+
+def test_privacy_heuristic_blocks_email_in_candidate_id():
+    """Generic string-walk scan must catch PII in previously unscanned fields."""
+    from writeback_candidate.cli import _scan_candidate
+
+    with pytest.raises(ValueError, match="privacy/secret"):
+        _scan_candidate(
+            {
+                "claim": "ok claim",
+                "source": "docs/ok.md",
+                "verified_by": "",
+                "owner": "maintainer",
+                "scope": "privacy",
+                "review_on": "docs/ok.md",
+                "destination": "docs/ok.md",
+                "acceptance": "",
+                "artifact": "",
+                "review_evidence": "",
+                "reviewer": "",
+                "task_id": "task_ok",
+                "session_id": "",
+                "candidate_id": "leak@example.com",
+            }
+        )

@@ -145,25 +145,21 @@ def _clean_text(value: str, field: str, limit: int) -> str:
     return value
 
 
+def _iter_strings(value: Any) -> Any:
+    """Yield every string leaf in a nested candidate payload."""
+    if isinstance(value, str):
+        yield value
+    elif isinstance(value, dict):
+        for nested in value.values():
+            yield from _iter_strings(nested)
+    elif isinstance(value, list):
+        for nested in value:
+            yield from _iter_strings(nested)
+
+
 def _scan_candidate(candidate: dict[str, Any]) -> None:
-    fields = " ".join(
-        str(candidate.get(key, ""))
-        for key in (
-            "claim",
-            "source",
-            "verified_by",
-            "owner",
-            "scope",
-            "review_on",
-            "destination",
-            "acceptance",
-            "artifact",
-            "review_evidence",
-            "reviewer",
-            "task_id",
-            "session_id",
-        )
-    )
+    # Walk all string leaves so newly added schema fields cannot bypass the scan.
+    fields = " ".join(_iter_strings(candidate))
     for pattern in _BLOCK_PATTERNS:
         if pattern.search(fields):
             raise ValueError(f"candidate blocked by privacy/secret heuristic: {pattern.pattern}")
